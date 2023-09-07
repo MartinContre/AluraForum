@@ -25,65 +25,37 @@ public class TopicController {
                                                            UriComponentsBuilder uriComponentsBuilder
     ) {
         Topic topic = topicRepository.save(new Topic(topicRecordData));
-        TopicResponseData topicResponseData = new TopicResponseData(
-                topic.getId(),
-                topic.getTitle(),
-                topic.getMessage(),
-                topic.getCreationDate(),
-                topic.getStatus(),
-                topic.getAuthorId(),
-                topic.getCourse()
-        );
 
         URI url = uriComponentsBuilder.path("/topics/{id}").buildAndExpand(topic.getId()).toUri();
 
-        return ResponseEntity.created(url).body(topicResponseData);
+        return ResponseEntity.created(url).body(new TopicResponseData(topic));
     }
 
     @GetMapping
-    public ResponseEntity<Page<TopicRecordData>> getListTopics(
-            @PageableDefault(size = 10, sort = "title")
+    public ResponseEntity<Page<TopicResponseData>> getListTopics(
+            @PageableDefault(size = 5, sort = "title")
             Pageable pageable
     ) {
-        return ResponseEntity.ok(topicRepository.findAll(pageable).map(TopicRecordData::new));
+        return ResponseEntity.ok(topicRepository.findAll(pageable).map(TopicResponseData::new));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TopicResponseData> getTopic(@PathVariable Long id){
+    public ResponseEntity<TopicResponseData> getTopicById(@PathVariable Long id){
         Topic topic = topicRepository.getReferenceById(id);
-
-        TopicResponseData topicResponseData = new TopicResponseData(
-                topic.getId(),
-                topic.getTitle(),
-                topic.getMessage(),
-                topic.getCreationDate(),
-                topic.getStatus(),
-                topic.getAuthorId(),
-                topic.getCourse()
-        );
-
-        return ResponseEntity.ok(topicResponseData);
+        return ResponseEntity.ok(new TopicResponseData(topic));
     }
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<TopicResponseData> updatePost(@PathVariable Long id, @RequestBody @Valid TopicUpdateData topicUpdateData) {
+    public ResponseEntity<TopicResponseData> updatePostById(@PathVariable Long id, @RequestBody @Valid TopicUpdateData topicUpdateData) {
         Topic topic = topicRepository.getReferenceById(id);
         topic.updateData(topicUpdateData);
-        return ResponseEntity.ok(new TopicResponseData(
-                topic.getId(),
-                topic.getTitle(),
-                topic.getMessage(),
-                topic.getCreationDate(),
-                topic.getStatus(),
-                topic.getAuthorId(),
-                topic.getCourse()
-        ));
+        return ResponseEntity.ok(new TopicResponseData(topic));
     }
 
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity deletePost(@PathVariable Long id) {
+    public ResponseEntity<String> deletePost(@PathVariable Long id) {
         Topic topic = topicRepository.getReferenceById(id);
         topicRepository.delete(topic);
         return ResponseEntity.noContent().build();

@@ -1,7 +1,7 @@
 spring:
   datasource:
     url: jdbc:mysql://localhost/alura_forum
-    username: user
+    username: username
     password: password
 
   jpa:
@@ -13,3 +13,7 @@ spring:
 server:
   error:
     include-stacktrace: never
+
+api:
+  security:
+    secret: ${JWT_SECRET}

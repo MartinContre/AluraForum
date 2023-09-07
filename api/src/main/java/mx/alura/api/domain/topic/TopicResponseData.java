@@ -1,8 +1,5 @@
 package mx.alura.api.domain.topic;
 
-import mx.alura.api.Course;
-import mx.alura.api.Status;
-
 import java.sql.Timestamp;
 
 public record TopicResponseData(
@@ -14,4 +11,16 @@ public record TopicResponseData(
         String authorId,
         Course course
 ) {
+
+    public TopicResponseData(Topic topic) {
+        this(
+                topic.getId(),
+                topic.getTitle(),
+                topic.getMessage(),
+                topic.getCreationDate(),
+                topic.getStatus(),
+                topic.getAuthorId(),
+                topic.getCourse()
+        );
+    }
 }

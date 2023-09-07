@@ -21,4 +21,15 @@ public class Author {
         this.name = authorData.name();
         this.surname = authorData.surname();
     }
+
+    public void updateData(AuthorUpdateData authorUpdateData) {
+        if (authorUpdateData.name() != null) {
+            this.name = authorUpdateData.name();
+        }
+
+        if (authorUpdateData.surname() != null) {
+            this.surname = authorUpdateData.surname();
+        }
+
+    }
 }

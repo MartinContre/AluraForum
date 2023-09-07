@@ -1,7 +1,10 @@
 package mx.alura.api.controller;
 
 import jakarta.validation.Valid;
+import mx.alura.api.domain.users.User;
 import mx.alura.api.domain.users.UserAuthenticationData;
+import mx.alura.api.infra.security.JWTTokenData;
+import mx.alura.api.infra.security.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,12 +22,16 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private TokenService tokenService;
+
     @PostMapping
-    public ResponseEntity authenticateUser(@RequestBody @Valid UserAuthenticationData userAuthenticationData) {
-        Authentication token = new UsernamePasswordAuthenticationToken(
+    public ResponseEntity<JWTTokenData> authenticateUser(@RequestBody @Valid UserAuthenticationData userAuthenticationData) {
+        Authentication authenticationToken = new UsernamePasswordAuthenticationToken(
                 userAuthenticationData.name(), userAuthenticationData.password()
         );
-        authenticationManager.authenticate(token);
-        return ResponseEntity.ok().build();
+        var authenticatedUser = authenticationManager.authenticate(authenticationToken);
+        var JWTToken = tokenService.tokenGenerator((User) authenticatedUser.getPrincipal());
+        return ResponseEntity.ok(new JWTTokenData(JWTToken));
     }
 }

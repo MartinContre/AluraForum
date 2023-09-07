@@ -1,4 +1,4 @@
-package mx.alura.api;
+package mx.alura.api.domain.topic;
 
 public enum Status {
     OPENED,

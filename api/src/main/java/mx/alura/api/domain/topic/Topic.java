@@ -2,8 +2,6 @@ package mx.alura.api.domain.topic;
 
 import jakarta.persistence.*;
 import lombok.*;
-import mx.alura.api.Course;
-import mx.alura.api.Status;
 import mx.alura.api.utils.TimestampUtility;
 
 import java.sql.Timestamp;
