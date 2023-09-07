@@ -5,5 +5,5 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    UserDetails findByName(String username);
+    UserDetails findByUsername(String username);
 }

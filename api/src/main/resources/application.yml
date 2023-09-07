@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:mysql://localhost/alura_forum
-    username: root
-    password: Root23+05
+    username: user
+    password: password
 
   jpa:
     show-sql: true
