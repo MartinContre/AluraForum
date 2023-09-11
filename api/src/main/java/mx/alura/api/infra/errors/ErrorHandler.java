@@ -22,7 +22,7 @@ public class ErrorHandler {
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<String> handlerError404() {
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Record Not found");
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -43,7 +43,7 @@ public class ErrorHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> handleConstraintViolation(org.hibernate.exception.ConstraintViolationException e) {
+    public ResponseEntity<String> handleConstraintViolation(ConstraintViolationException e) {
         String errorMessage = "The operation could not be completed due to integrity constraints.";
         Logger.getLogger("Error", e.getMessage());
         return ResponseEntity.badRequest().body(errorMessage);
@@ -59,6 +59,20 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> handleSQLException(SQLException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(java.util.MissingResourceException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> handleMissingResourceException(java.util.MissingResourceException e) {
+        String errorMessage = e.getMessage();
+        Logger.getLogger("Error").severe(errorMessage);
+
+        if (errorMessage.contains("Duplicate entry")) {
+            String specificErrorMessage = errorMessage.substring(errorMessage.indexOf("Duplicate entry"));
+            return ResponseEntity.badRequest().body(specificErrorMessage);
+        }
+
+        return ResponseEntity.badRequest().body(errorMessage);
     }
 
 

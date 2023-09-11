@@ -1,7 +1,7 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost/alura_forum
-    username: username
+    url: jdbc:mysql://localhost/forum
+    username: user
     password: password
 
   jpa:

@@ -5,7 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import mx.alura.api.domain.users.User;
+import mx.alura.api.model.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +36,7 @@ public class TokenService {
     public String getSubject(String token) {
         try {
             if (token == null) {
-                throw new RuntimeException();
+                throw new RuntimeException("Invalid Token");
             }
             Algorithm algorithm = Algorithm.HMAC256(apiSecret);
             DecodedJWT verifier = JWT.require(algorithm)
