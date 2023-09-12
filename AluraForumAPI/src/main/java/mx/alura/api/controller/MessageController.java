@@ -1,5 +1,6 @@
 package mx.alura.api.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import mx.alura.api.infra.errors.ErrorHandler;
@@ -17,6 +18,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/forum/messages")
+@SecurityRequirement(name = "bearerAuth")
 public class MessageController {
 
     private final MessageRepository messageRepository;

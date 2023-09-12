@@ -18,7 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfigurations {
 
-    private SecurityFilter securityFilter;
+    private final SecurityFilter securityFilter;
 
     public SecurityConfigurations(SecurityFilter securityFilter) {
         this.securityFilter = securityFilter;
@@ -27,13 +27,38 @@ public class SecurityConfigurations {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(sessionManagement ->
-                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests((authorize) ->
-                        authorize.requestMatchers(HttpMethod.POST, "login")
-                                .permitAll()
-                                .anyRequest().authenticated()
+                .csrf(
+                        AbstractHttpConfigurer::disable
+                )
+                .sessionManagement(
+                        sessionManagement ->
+                                sessionManagement
+                                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(
+                        (authorize) ->
+                                authorize
+                                        .requestMatchers(HttpMethod.POST, "login")
+                                        .permitAll()
+                                        .requestMatchers("/v3/api-docs/**", "/doc/swagger-ui/**")
+                                        .permitAll()
+                                        .anyRequest()
+                                        .authenticated()
+                )
+                .exceptionHandling(
+                        auth ->
+                                auth.authenticationEntryPoint(
+                                        ((request, response, authException) -> {
+                                            response.setStatus(401);
+                                            response.setContentType("application/json");
+                                            response.getWriter()
+                                                    .write("{" +
+                                                            "*******" +
+                                                            "Warning: " +
+                                                            "You are not authenticated." +
+                                                            "*******" +
+                                                            "}");
+                                        })
+                                )
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
