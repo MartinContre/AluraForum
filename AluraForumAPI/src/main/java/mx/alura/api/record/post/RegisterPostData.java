@@ -4,6 +4,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import mx.alura.api.model.Status;
 
+
+/**
+ * A record representing the data for registering a post.
+ */
 public record RegisterPostData(
         @NotBlank
         String title,

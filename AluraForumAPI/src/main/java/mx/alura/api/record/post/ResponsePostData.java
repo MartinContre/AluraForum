@@ -5,6 +5,9 @@ import mx.alura.api.model.Status;
 
 import java.sql.Timestamp;
 
+/**
+ * A record representing the response data for a post.
+ */
 public record ResponsePostData(
         Long id,
         String title,
@@ -15,6 +18,11 @@ public record ResponsePostData(
         Long courseId
 ) {
 
+    /**
+     * Constructs a ResponsePostData object based on a Post entity.
+     *
+     * @param post The Post entity from which to create the response data.
+     */
     public ResponsePostData(Post post) {
         this(
                 post.getId(),

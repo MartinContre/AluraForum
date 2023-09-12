@@ -13,12 +13,21 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
+/**
+ * Service for generating and verifying JWT (JSON Web Token) tokens.
+ */
 @Service
 public class TokenService {
 
     @Value("${api.security.secret}")
     private String apiSecret;
 
+    /**
+     * Generates a JWT token for a given user.
+     *
+     * @param user The user for whom the token is generated.
+     * @return The generated JWT token.
+     */
     public String tokenGenerator(User user) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(apiSecret);
@@ -33,6 +42,12 @@ public class TokenService {
         }
     }
 
+    /**
+     * Retrieves the subject (username) from a JWT token.
+     *
+     * @param token The JWT token to verify and extract the subject from.
+     * @return The subject (username) extracted from the token.
+     */
     public String getSubject(String token) {
         try {
             if (token == null) {
@@ -52,6 +67,11 @@ public class TokenService {
         }
     }
 
+    /**
+     * Generates the expiration date for a JWT token (2 hours from the current time).
+     *
+     * @return The expiration date as an Instant.
+     */
     private Instant generateExpirationDate() {
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-06:00"));
     }

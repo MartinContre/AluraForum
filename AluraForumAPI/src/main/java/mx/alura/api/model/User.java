@@ -1,5 +1,6 @@
 package mx.alura.api.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,6 +16,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Represents a User entity in the application.
+ */
 @Table(name = "users")
 @Entity(name = "User")
 @Data
@@ -22,24 +26,47 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class User implements UserDetails {
+
+    @Schema(description = "User ID")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Schema(description = "Username of the user")
     @Column(name = "name")
     private String username;
+
+    @Schema(description = "Email of the user")
     private String email;
+
+    @Schema(description = "Password of the user")
     private String password;
 
+    /**
+     * Constructs a User object with the given ID.
+     *
+     * @param id The user ID.
+     */
     public User(Long id) {
         this.id = id;
     }
 
+    /**
+     * Constructs a User object from user registration data.
+     *
+     * @param userRegisterData The user registration data.
+     */
     public User(RegisterUserData userRegisterData) {
         this.username = userRegisterData.name();
         this.email = userRegisterData.email();
         this.password = userRegisterData.password();
     }
 
+    /**
+     * Updates the user's data using the provided update data.
+     *
+     * @param userUpdateData The update data.
+     */
     public void updateData(UpdateUserData userUpdateData) {
         if (userUpdateData.name() != null) {
             this.username = userUpdateData.name();
@@ -54,6 +81,11 @@ public class User implements UserDetails {
         }
     }
 
+    /**
+     * Updates the user's data using the provided update data.
+     *
+     * @param updateUserByIdData The update data.
+     */
     public void updateData(UpdateUserByIdData updateUserByIdData) {
         if (updateUserByIdData.name() != null) {
             this.username = updateUserByIdData.name();

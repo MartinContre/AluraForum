@@ -14,16 +14,31 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * Configuration class for setting up security configurations in the Spring Boot application.
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfigurations {
 
     private final SecurityFilter securityFilter;
 
+    /**
+     * Constructs a new SecurityConfigurations instance.
+     *
+     * @param securityFilter The security filter used for authentication.
+     */
     public SecurityConfigurations(SecurityFilter securityFilter) {
         this.securityFilter = securityFilter;
     }
 
+    /**
+     * Configures the security filter chain for the application.
+     *
+     * @param httpSecurity The HttpSecurity object to configure.
+     * @return A SecurityFilterChain with configured security settings.
+     * @throws Exception If there is an error during configuration.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
@@ -64,11 +79,23 @@ public class SecurityConfigurations {
                 .build();
     }
 
+    /**
+     * Creates an AuthenticationManager bean for authentication.
+     *
+     * @param authenticationConfiguration The AuthenticationConfiguration to use.
+     * @return An AuthenticationManager instance.
+     * @throws Exception If there is an error creating the AuthenticationManager.
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    /**
+     * Creates a PasswordEncoder bean for password hashing.
+     *
+     * @return A PasswordEncoder instance.
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

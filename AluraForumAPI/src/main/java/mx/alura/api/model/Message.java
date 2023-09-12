@@ -1,5 +1,6 @@
 package mx.alura.api.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -12,6 +13,9 @@ import mx.alura.api.utils.TimestampUtility;
 
 import java.sql.Timestamp;
 
+/**
+ * Represents a message (Response) in the system.
+ */
 @Table(name = "messages")
 @Entity(name = "Message")
 @Getter
@@ -19,22 +23,38 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Message {
+
+    @Schema(description = "Message ID")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Schema(description = "The content of the message.")
     private String message;
+
+    @Schema(description = "The creation date of the message.")
     @Column(name = "creation_date")
     private Timestamp creationDate;
+
+    @Schema(description = "The status of the message (true for active," +
+            "false for inactive).")
     private Boolean status = true;
 
+    @Schema(description = "The user id who posted the message.")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User userId;
 
+    @Schema(description = "The post id to which this message belongs.")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post postId;
 
+    /**
+     * Creates a new message with the provided data.
+     *
+     * @param registerMessageData The data to register the message.
+     */
     public Message(RegisterMessageData registerMessageData) {
         this.message = registerMessageData.message();
         this.creationDate = TimestampUtility.getTimeNowRounded();
@@ -42,6 +62,11 @@ public class Message {
         this.postId = new Post(registerMessageData.post());
     }
 
+    /**
+     * Updates the message data with the provided data.
+     *
+     * @param updateMessageData The data to update the message.
+     */
     public void updateData(UpdateMessageData updateMessageData) {
         if (updateMessageData.message() != null) {
             this.message = updateMessageData.message();
@@ -57,6 +82,11 @@ public class Message {
         }
     }
 
+    /**
+     * Updates the message data with the provided data.
+     *
+     * @param updateMessageDataById The data to update the message.
+     */
     public void updateData(UpdateMessageDataById updateMessageDataById) {
         if (updateMessageDataById.message() != null) {
             this.message = updateMessageDataById.message();
